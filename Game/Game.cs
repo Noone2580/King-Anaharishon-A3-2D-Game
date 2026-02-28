@@ -11,6 +11,9 @@ namespace MohawkGame2D;
 /// </summary>
 public class Game
 {
+
+    public Vector2[] InputAxis = new Vector2[4]; 
+
     // Place your variables here:
     public int MaxLives = 3;
 
@@ -19,6 +22,7 @@ public class Game
     float MaxFallSpeed = 30;
 
     float HitVelocity = 10;
+    float DeadZone = .5f;
 
     PlayerMaster[] Players = new PlayerMaster[2];
 
@@ -52,18 +56,18 @@ public class Game
                             && Players[i].Position.Y < Postion.Y + Size.Y)
                         {
                             Players[i].TakeDamage(Direction, Damage);
-                            Console.WriteLine("Damage");
 
                         }
-                        // Debug Hit Box
-                        Draw.FillColor = Color.Black;
-                        Draw.Rectangle(Postion, Size);
 
                     }
                 }
             }
         }
     }
+
+
+
+    
 
 
     /// <summary>
@@ -91,6 +95,10 @@ public class Game
     /// <summary>
     ///     Update runs every frame.
     /// </summary>
+    /// 
+
+
+
     public void Update()
     {
         // Reset screen
@@ -106,36 +114,35 @@ public class Game
             if (Players[i].Position.Y > Window.Height || Players[i].Position.Y + Players[i].Size.Y < 0 || Players[i].Position.X + Players[i].Size.X < 0 || Players[i].Position.X > Window.Width) // Kill player if off screen
             {
                 Players[i].Die();
-                Console.WriteLine("DIE!");
+            }
+
+            if (Input.IsControllerButtonPressed(i, ControllerButton.RightFaceLeft)) 
+            {
+                Players[i].Attack();
+            }
+            if (Input.IsControllerButtonPressed(i, ControllerButton.RightFaceUp))
+            {
+                Players[i].Jump();
+            }
+
+            if (Input.GetControllerAxis(i, ControllerAxis.LeftX) < -DeadZone)
+            {
+                Players[i].MoveLeft();
+            }
+            if (Input.GetControllerAxis(i, ControllerAxis.LeftX) > DeadZone)
+            {
+                Players[i].MoveRight();
+            }
+
+            if (Input.GetControllerAxis(i, ControllerAxis.LeftY) <= -DeadZone)
+            {
+                Players[i].MoveUp();
+            }
+            if (Input.GetControllerAxis(i, ControllerAxis.LeftY) > DeadZone)
+            {
+                Players[i].MoveDown();
             }
         }
-
-        // Input Test
-
-        if (Input.IsKeyboardKeyPressed(KeyboardInput.Space))
-        {
-            Players[0].Attack();
-        }
-
-        if (Input.IsKeyboardKeyPressed(KeyboardInput.Up))
-        {
-            Players[0].Jump();
-        }
-
-        if (Input.IsKeyboardKeyDown(KeyboardInput.Left))
-        {
-            Players[0].MoveLeft();
-        }
-
-        if (Input.IsKeyboardKeyDown(KeyboardInput.Right))
-        {
-            Players[0].MoveRight();
-        }
-        if (Input.IsKeyboardKeyDown(KeyboardInput.Down)) 
-        {
-            Players[0].MoveDown();
-        }
-
 
     }
 }

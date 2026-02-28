@@ -13,7 +13,7 @@ public class PlayerMaster
     public Vector2 Size = new Vector2(25, 35);
 
     // Movement Vars
-    public float MoveSpeed = 150;
+    public float MoveSpeed = 100;
     public Vector2 Position = new Vector2();
     public Vector2 Velocity = new Vector2();
     Vector2 LastDirection = new Vector2(1,0);
@@ -133,8 +133,13 @@ public class PlayerMaster
     }
     public void MoveDown() 
     {
-        Velocity.Y += MoveSpeed/2;
+        Velocity.Y += MoveSpeed/3;
         LastDirection = new Vector2(0,1);
+    }
+
+    public void MoveUp()
+    {
+        LastDirection = new Vector2(0, -1);
     }
     // Movement End
 
