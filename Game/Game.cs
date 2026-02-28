@@ -1,5 +1,6 @@
 ﻿// Include the namespaces (code libraries) you need below.
 using System;
+using System.Drawing;
 using System.Numerics;
 
 // The namespace your code is in.
@@ -45,9 +46,9 @@ public class Game
                 {
                     if (Players[i] != PlayerAttacking)// Check if attacking player is not attacked 
                     {
-                        if (Players[i].Position.X + Players[i].Size.X > Postion.X 
-                            && Players[i].Position.X < Postion.X + Size.X 
-                            && Players[i].Position.Y + Players[i].Size.Y > Postion.Y 
+                        if (Players[i].Position.X + Players[i].Size.X > Postion.X
+                            && Players[i].Position.X < Postion.X + Size.X
+                            && Players[i].Position.Y + Players[i].Size.Y > Postion.Y
                             && Players[i].Position.Y < Postion.Y + Size.Y)
                         {
                             Players[i].TakeDamage(Direction, Damage);
@@ -100,15 +101,21 @@ public class Game
 
         for (int i = 0; i < Players.Length; i++)
         {
-
             Players[i].DrawPlayer();
+
+            if (Players[i].Position.Y > Window.Height || Players[i].Position.Y + Players[i].Size.Y < 0 || Players[i].Position.X + Players[i].Size.X < 0 || Players[i].Position.X > Window.Width) // Kill player if off screen
+            {
+                Players[i].Die();
+                Console.WriteLine("DIE!");
+            }
         }
 
         // Input Test
 
         if (Input.IsKeyboardKeyPressed(KeyboardInput.Space))
+        {
             Players[0].Attack();
-
+        }
 
         if (Input.IsKeyboardKeyPressed(KeyboardInput.Up))
         {
@@ -124,8 +131,12 @@ public class Game
         {
             Players[0].MoveRight();
         }
+        if (Input.IsKeyboardKeyDown(KeyboardInput.Down)) 
+        {
+            Players[0].MoveDown();
+        }
 
-        
+
     }
 }
 

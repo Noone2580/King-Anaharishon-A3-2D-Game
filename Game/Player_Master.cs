@@ -1,5 +1,6 @@
 ﻿using MohawkGame2D;
 using System;
+using System.Collections.Generic;
 using System.Numerics;
 using System.Reflection;
 
@@ -15,6 +16,7 @@ public class PlayerMaster
     public float MoveSpeed = 150;
     public Vector2 Position = new Vector2();
     public Vector2 Velocity = new Vector2();
+    Vector2 LastDirection = new Vector2(1,0);
 
 
     // Jumping Vars
@@ -64,11 +66,47 @@ public class PlayerMaster
         Hit = true;
         DHp += Damage;
         Velocity += Direction * (HitVelocity * DHp);
+        Console.WriteLine(Direction);
     }
 
-    public void Attack(Vector2 Direction) // Attack
+    public void Attack() // Attack
     {
-        game.DealDamage(BaseDamage, Position, Size, Direction, this);
+        Vector2 TempPos = Position;
+
+        if (LastDirection.X > 0)
+        {
+            TempPos.X = Position.X + Size.X / 2;
+            game.DealDamage(BaseDamage, TempPos, Size, LastDirection, this);
+            return;
+        }
+        if (LastDirection.X < 0)
+        {
+            TempPos.X = Position.X - Size.X / 2;
+            game.DealDamage(BaseDamage, TempPos, Size, LastDirection, this);
+            return;
+        }
+        if (LastDirection.Y > 0)
+        {
+            TempPos.Y = Position.Y + Size.Y / 2;
+            game.DealDamage(BaseDamage, TempPos, Size, LastDirection, this);
+            return;
+        }
+        if (LastDirection.Y < 0)
+        {
+            TempPos.Y = Position.Y - Size.Y / 2;
+            game.DealDamage(BaseDamage, TempPos, Size, LastDirection, this);
+            return;
+        }
+    }
+
+    public void Die() 
+    {
+        Hit = false;
+        NumJumps = 0;
+        DHp = 0;
+        Lives--;
+        Velocity = new Vector2();
+        Position = new Vector2(Window.Width/2, 10);
     }
 
     // Movement
@@ -79,14 +117,24 @@ public class PlayerMaster
             Velocity.Y = JumpForce;
             NumJumps++;
         }
+        LastDirection = new Vector2(0,-1);
     }
     public void MoveLeft()
     {
         Velocity.X += -MoveSpeed;
+        LastDirection = new Vector2(-1,0);
+
     }
     public void MoveRight()
     {
         Velocity.X += MoveSpeed;
+        LastDirection = new Vector2(1,0);
+
+    }
+    public void MoveDown() 
+    {
+        Velocity.Y += MoveSpeed/2;
+        LastDirection = new Vector2(0,1);
     }
     // Movement End
 
@@ -99,7 +147,6 @@ public class PlayerMaster
         if (Hit)
         {
             Velocity.X = Velocity.X * .9f;
-            Velocity.Y = Velocity.Y * .9f;
 
             Vector2 CalVel = Velocity;
 
