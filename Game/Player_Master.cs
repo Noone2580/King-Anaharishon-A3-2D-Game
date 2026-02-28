@@ -5,6 +5,7 @@ using System.Reflection;
 
 public class PlayerMaster
 {
+    public Game game;
 
     Vector2 Size = new Vector2(25, 25);
 
@@ -17,25 +18,47 @@ public class PlayerMaster
 
     public int Lives = 0;
 
-    public void SetupPlayer(int PlayerIndex)
+
+    void Col()
     {
-        PIndex = PlayerIndex;
+        Vector2 FCol = game.FloorCol(Position, Size);
+
+        //if (FCol.X != 0)
+        //{
+        //    Position.X = game.FloorCol(Position, Size).X - Size.X;
+
+        //    Velocity.X = 0;
+        //}
+        if (FCol.Y != 0)
+        {
+            Position.Y = game.FloorCol(Position, Size).Y - Size.Y;
+
+            Velocity.Y = 0;
+        }
     }
 
-    public void DrawPlayer( )
+    public void Jump()
+    {
+        Velocity.Y = -200;
+    }
+    public void MoveLeft()
+    {
+        Velocity.X -= 10;
+    }
+    public void MoveRight()
+    {
+        Velocity.X += 10;
+    }
+
+
+    public void DrawPlayer()
     {
 
         Velocity += new Vector2(0, 25);
 
         Position += Velocity * Time.DeltaTime;
 
-        //if (Game.IsFloorCol(Position, Size))
-        //{
-        //    Position.Y = Game.FloorCol(Position, Size).Y - Size.Y;
-
-        //    Velocity.Y = 0;
-
-        //}
+        Col();
 
         Draw.FillColor = Color.Red;
         Draw.Rectangle(Position, Size);

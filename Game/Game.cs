@@ -22,14 +22,18 @@ public class Game
 
     public Vector2 FloorCol(Vector2 ColPos, Vector2 ColSize)
     {
-        Vector2 Floor = new Vector2();
+        Vector2 Floor = new Vector2(0);
 
         if (ColPos.X + ColSize.X > 150 && ColPos.X - ColSize.X < 650 && ColPos.Y + ColSize.Y > 400)
-            return Floor;
-        else
-            return Floor;
+        {
+            Floor.X = 150;
+            Floor.Y = 400;
+        }
+        
+        
+        return Floor;
     }
-    
+
 
     /// <summary>
     ///     Setup runs once before the game loop begins.
@@ -44,6 +48,7 @@ public class Game
         {
             Players[i] = new PlayerMaster();// TEST FUNC REMOVE SOON
 
+            Players[i].game = this;
             Players[i].Lives = 4;
             Players[i].PIndex = i;
             Players[i].Position = new Vector2(Window.Width / 2, Window.Height);
@@ -60,14 +65,24 @@ public class Game
         // Reset screen
         Window.ClearBackground(Color.White);
 
-        Draw.FillColor= Color.Black;
-        Draw.Rectangle(150 , 400, 500 , 200);
+        Draw.FillColor = Color.Black;
+        Draw.Rectangle(150, 400, 500, 200);
 
         // Input Test
-        
-        if (Input.IsKeyboardKeyPressed(KeyboardInput.Up)) 
+
+        if (Input.IsKeyboardKeyPressed(KeyboardInput.Up))
         {
-            Players[0].Velocity.Y = -500;
+            Players[0].Jump();
+        }
+
+        if (Input.IsKeyboardKeyDown(KeyboardInput.Left)) 
+        {
+            Players[0].MoveLeft();
+        }
+
+        if (Input.IsKeyboardKeyDown(KeyboardInput.Right))
+        {
+            Players[0].MoveRight();
         }
 
         for (int i = 0; i < Players.Length; i++)
