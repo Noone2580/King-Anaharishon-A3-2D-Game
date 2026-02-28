@@ -11,18 +11,25 @@ namespace MohawkGame2D;
 public class Game
 {
     // Place your variables here:
-    Vector2[] PlayerVelocity = new Vector2[4];
-    Vector2[] PlayerCords = new Vector2[4];
-    float[] PlayerDHP = new float[4];
-    int[] PlayerLives = new int[4];
+    public int MaxLives = 3;
+
+    public float Gravtiy = 25;
+
+    float MaxFallSpeed = 30;
+
+    PlayerMaster[] Players = new PlayerMaster[1];
 
 
-
-    public void DrawPlayer()
+    public Vector2 FloorCol(Vector2 ColPos, Vector2 ColSize)
     {
-        Draw.FillColor = Color.Red;
-        Draw.Circle(PlayerCords[0], 50);
+        Vector2 Floor = new Vector2();
+
+        if (ColPos.X + ColSize.X > 150 && ColPos.X - ColSize.X < 650 && ColPos.Y + ColSize.Y > 400)
+            return Floor;
+        else
+            return Floor;
     }
+    
 
     /// <summary>
     ///     Setup runs once before the game loop begins.
@@ -31,7 +38,17 @@ public class Game
     {
         Window.SetTitle("Fight!");
         Window.SetSize(800, 600);
-        PlayerCords[0] = new Vector2(0, 0);
+
+
+        for (int i = 0; i < Players.Length; i++)
+        {
+            Players[i] = new PlayerMaster();// TEST FUNC REMOVE SOON
+
+            Players[i].Lives = 4;
+            Players[i].PIndex = i;
+            Players[i].Position = new Vector2(Window.Width / 2, Window.Height);
+
+        }
 
     }
 
@@ -43,7 +60,21 @@ public class Game
         // Reset screen
         Window.ClearBackground(Color.White);
 
-        DrawPlayer();
+        Draw.FillColor= Color.Black;
+        Draw.Rectangle(150 , 400, 500 , 200);
+
+        // Input Test
+        
+        if (Input.IsKeyboardKeyPressed(KeyboardInput.Up)) 
+        {
+            Players[0].Velocity.Y = -500;
+        }
+
+        for (int i = 0; i < Players.Length; i++)
+        {
+
+            Players[i].DrawPlayer();
+        }
     }
 }
 
