@@ -71,8 +71,8 @@ public class Game
         Window.SetTitle("Fight!");
         Window.SetSize(800, 600);
 
-        //menu.Setup();
-        GameStart();
+        menu.Setup();
+        //GameStart();
     }
 
     public void GameStart()
