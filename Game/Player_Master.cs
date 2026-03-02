@@ -8,6 +8,11 @@ using System.Runtime.CompilerServices;
 public class PlayerMaster
 {
 
+    public virtual PlayerMaster NewSelf()
+    {
+        return new PlayerMaster();
+    }
+
     // Game Info
     public Game game;
     public int PIndex = 0;
@@ -67,7 +72,7 @@ public class PlayerMaster
 
     void AnimUpdate()
     {
-        if (AnimOffIndex  == 0) { AnimOffeset.X = 0; }
+        if (AnimOffIndex == 0) { AnimOffeset.X = 0; }
         if (CalTiggerPerSec(AnimFrameRate, FC))
         {
             if (AnimOffIndex < MaxAnimOffIndex)
@@ -136,7 +141,7 @@ public class PlayerMaster
         }
     }
 
-    public virtual void SetCustomVars() 
+    public virtual void SetCustomVars()
     {
 
     }

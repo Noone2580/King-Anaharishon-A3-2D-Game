@@ -20,7 +20,7 @@ public class Game
 
 
     // Player Settings
-    public PlayerMaster[] Players = new PlayerMaster[4];
+    public PlayerMaster[] Players { get; set; } = new PlayerMaster[4];
     public int MaxLives = 3;
     float DeadZone = .5f;
 
@@ -68,10 +68,10 @@ public class Game
 
     public void Setup()
     {
-        Window.SetTitle("Fight!");
+        Window.SetTitle("Fight Night!");
         Window.SetSize(800, 600);
 
-        menu.Setup();
+        menu.Setup(this);
         //GameStart();
     }
 
@@ -79,8 +79,6 @@ public class Game
     {
         for (int i = 0; i < Players.Length; i++)
         {
-            Players[i] = new VBot();// TEST FUNC REMOVE SOON
-
             Players[i].Setup();
             Players[i].game = this;
             Players[i].Lives = 4;

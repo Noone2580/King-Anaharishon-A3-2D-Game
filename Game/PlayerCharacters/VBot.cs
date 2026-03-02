@@ -4,6 +4,10 @@ using System.Drawing;
 using System.Numerics;
 public class VBot : PlayerMaster
 {
+    public override PlayerMaster NewSelf()
+    {
+        return new VBot();
+    }
 
     // When Modafing Vars set them here in the SetCustomVars Function
     public override void SetCustomVars() // When Modafing Functions if possable use OVERRIDE
