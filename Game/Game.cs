@@ -11,21 +11,21 @@ namespace MohawkGame2D;
 /// </summary>
 public class Game
 {
-
-    public Vector2[] InputAxis = new Vector2[4]; 
-
-    // Place your variables here:
-    public int MaxLives = 3;
-
+    // Simultions Settings
+    int GameState = 0;
     public float Gravtiy = 25;
+    float OutOfBoundsRange = 100;
+    float HitVelocity = 2f;
+    public int FC = 0;
 
-    float MaxFallSpeed = 30;
 
-    float HitVelocity = 10;
+    // Player Settings
+    public PlayerMaster[] Players = new PlayerMaster[4];
+    public int MaxLives = 3;
     float DeadZone = .5f;
 
-    PlayerMaster[] Players = new PlayerMaster[2];
-
+    // Menu
+    CharacterMenu menu = new CharacterMenu();
 
     public Vector2 FloorCol(Vector2 ColPos, Vector2 ColSize)
     {
@@ -66,22 +66,22 @@ public class Game
     }
 
 
-
-    
-
-
-    /// <summary>
-    ///     Setup runs once before the game loop begins.
-    /// </summary>
     public void Setup()
     {
         Window.SetTitle("Fight!");
         Window.SetSize(800, 600);
 
+        //menu.Setup();
+        GameStart();
+    }
+
+    public void GameStart()
+    {
         for (int i = 0; i < Players.Length; i++)
         {
-            Players[i] = new PlayerMaster();// TEST FUNC REMOVE SOON
+            Players[i] = new VBot();// TEST FUNC REMOVE SOON
 
+            Players[i].Setup();
             Players[i].game = this;
             Players[i].Lives = 4;
             Players[i].PIndex = i;
@@ -90,60 +90,68 @@ public class Game
 
         }
 
+        GameState = 1;
     }
-
-    /// <summary>
-    ///     Update runs every frame.
-    /// </summary>
-    /// 
-
 
 
     public void Update()
     {
-        // Reset screen
-        Window.ClearBackground(Color.White);
-
-        Draw.FillColor = Color.Black;
-        Draw.Rectangle(150, 400, 500, 200);
-
-        for (int i = 0; i < Players.Length; i++)
+        if (GameState <= 0)
         {
-            Players[i].DrawPlayer();
-
-            if (Players[i].Position.Y > Window.Height || Players[i].Position.Y + Players[i].Size.Y < 0 || Players[i].Position.X + Players[i].Size.X < 0 || Players[i].Position.X > Window.Width) // Kill player if off screen
-            {
-                Players[i].Die();
-            }
-
-            if (Input.IsControllerButtonPressed(i, ControllerButton.RightFaceLeft)) 
-            {
-                Players[i].Attack();
-            }
-            if (Input.IsControllerButtonPressed(i, ControllerButton.RightFaceUp))
-            {
-                Players[i].Jump();
-            }
-
-            if (Input.GetControllerAxis(i, ControllerAxis.LeftX) < -DeadZone)
-            {
-                Players[i].MoveLeft();
-            }
-            if (Input.GetControllerAxis(i, ControllerAxis.LeftX) > DeadZone)
-            {
-                Players[i].MoveRight();
-            }
-
-            if (Input.GetControllerAxis(i, ControllerAxis.LeftY) <= -DeadZone)
-            {
-                Players[i].MoveUp();
-            }
-            if (Input.GetControllerAxis(i, ControllerAxis.LeftY) > DeadZone)
-            {
-                Players[i].MoveDown();
-            }
+            menu.DrawMenu();
         }
+        if (GameState == 1)// Game In Play
+        {
+            // Reset screen
+            Window.ClearBackground(Color.White);
 
+            Draw.FillColor = Color.Black;
+            Draw.Rectangle(150, 400, 500, 200);
+
+            for (int i = 0; i < Players.Length; i++)
+            {
+                Players[i].DrawPlayer();
+
+                if (Players[i].Position.Y > Window.Height + OutOfBoundsRange || Players[i].Position.Y + Players[i].Size.Y < 0 - OutOfBoundsRange || Players[i].Position.X + Players[i].Size.X < 0 - OutOfBoundsRange || Players[i].Position.X > Window.Width + OutOfBoundsRange) // Kill player if off screen
+                {
+                    Players[i].Die();
+                }
+
+                if (Input.IsControllerButtonPressed(i, ControllerButton.RightFaceLeft))
+                {
+                    Players[i].Attack();
+                }
+                if (Input.IsControllerButtonPressed(i, ControllerButton.RightFaceUp))
+                {
+                    Players[i].Jump();
+                }
+
+                if (Input.GetControllerAxis(i, ControllerAxis.LeftX) < -DeadZone)
+                {
+                    Players[i].MoveLeft();
+                }
+                if (Input.GetControllerAxis(i, ControllerAxis.LeftX) > DeadZone)
+                {
+                    Players[i].MoveRight();
+                }
+
+                if (Input.GetControllerAxis(i, ControllerAxis.LeftY) <= -DeadZone)
+                {
+                    Players[i].MoveUp();
+                }
+                if (Input.GetControllerAxis(i, ControllerAxis.LeftY) > DeadZone)
+                {
+                    Players[i].MoveDown();
+                }
+            }
+
+            FC++;
+            if (FC >= 60)
+            {
+                FC = 0;
+            }
+            return;
+        }
     }
 }
 
