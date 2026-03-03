@@ -22,6 +22,7 @@ public class SparkPlug : PlayerMaster
         AnimFrameRate = 5;
 
         BaseDamage = 2;
+        DamageStunTime = .3f;
 
         Name = "Spark Plug";
         PortraitTexturesLocations = ["../../../Assets/Characters/SparkPlug/Sparkplug_Portarit_2.png", "../../../Assets/Characters/SparkPlug/Sparkplug_Portarit.png"];

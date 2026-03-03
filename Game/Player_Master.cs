@@ -18,6 +18,8 @@ public class PlayerMaster
     public int PIndex = 0;
     public string Name = "V-BOT";
     int FC = 0;
+    float[] Timers = new float[100];
+
 
     // Anim and size
     public string[] TexureLocations { get; set; } = ["../../../Assets/Characters/VBot/FN_VBOT_Idle.png",// Idle = 0
@@ -65,6 +67,9 @@ public class PlayerMaster
     public float DHp = 0;
     public float BaseDamage { get; set; } = 10;
     public float HitVelocity;
+    public float DamageStunTime { get; set; } = .1f;
+
+
 
     bool IsAttacking;
     bool Hit;
@@ -131,6 +136,26 @@ public class PlayerMaster
         return false;
     }
 
+    public bool IsTimerDone(int TimerIndex)
+    {
+        if (Time.SecondsElapsed >= Timers[TimerIndex])
+        {
+            Timers[TimerIndex] = 0;
+            return true;
+        }
+        else
+            return false;
+    }
+
+    public void SetTimer(int TimerIndex, float setTime)
+    {
+        if (Timers[TimerIndex] <= 0)
+        {
+            Timers[TimerIndex] = setTime + Time.SecondsElapsed;
+        }
+    }
+
+
     public void Setup()
     {
         SetCustomVars();
@@ -183,38 +208,44 @@ public class PlayerMaster
 
     public virtual void Attack() // Attack
     {
-        Vector2 TempPos = Position;
-        IsAttacking = true;
-        AnimOffIndex = 0;
-        FC = 0;
+        if (IsTimerDone(0))
+        {
+            SetTimer(0, 0.15f);
+            Vector2 TempPos = Position;
+            IsAttacking = true;
+            AnimOffIndex = 0;
+            FC = 0;
+            Velocity += LastDirection * 200;
+            LockMovement = true;
 
-        if (LastDirection.X > 0)
-        {
-            AnimIndex = 3;
-            TempPos.X = Position.X + Size.X / 2;
-            game.DealDamage(BaseDamage, TempPos, Size, LastDirection, this);
-            return;
-        }
-        if (LastDirection.X < 0)
-        {
-            AnimIndex = 3;
-            TempPos.X = Position.X - Size.X / 2;
-            game.DealDamage(BaseDamage, TempPos, Size, LastDirection, this);
-            return;
-        }
-        if (LastDirection.Y > 0)
-        {
-            AnimIndex = 5;
-            TempPos.Y = Position.Y + Size.Y / 2;
-            game.DealDamage(BaseDamage, TempPos, Size, LastDirection, this);
-            return;
-        }
-        if (LastDirection.Y < 0)
-        {
-            AnimIndex = 4;
-            TempPos.Y = Position.Y - Size.Y / 2;
-            game.DealDamage(BaseDamage, TempPos, Size, LastDirection, this);
-            return;
+            if (LastDirection.X > 0)
+            {
+                AnimIndex = 3;
+                TempPos.X = Position.X + Size.X / 2;
+                game.DealDamage(BaseDamage, TempPos, Size, LastDirection, DamageStunTime, this);
+                return;
+            }
+            if (LastDirection.X < 0)
+            {
+                AnimIndex = 3;
+                TempPos.X = Position.X - Size.X / 2;
+                game.DealDamage(BaseDamage, TempPos, Size, LastDirection, DamageStunTime, this);
+                return;
+            }
+            if (LastDirection.Y > 0)
+            {
+                AnimIndex = 5;
+                TempPos.Y = Position.Y + Size.Y / 2;
+                game.DealDamage(BaseDamage, TempPos, Size, LastDirection, DamageStunTime, this);
+                return;
+            }
+            if (LastDirection.Y < 0)
+            {
+                AnimIndex = 4;
+                TempPos.Y = Position.Y - Size.Y / 2;
+                game.DealDamage(BaseDamage, TempPos, Size, LastDirection, DamageStunTime, this);
+                return;
+            }
         }
     }
     public virtual void SpecialAttack()// Special Attack
@@ -288,6 +319,7 @@ public class PlayerMaster
 
         if (Hit)
         {
+            LockMovement = true;
             Velocity.X = Velocity.X * .9f;
 
             Vector2 CalVel = Velocity;
@@ -298,12 +330,14 @@ public class PlayerMaster
             if (CalVel.X < MoveSpeed && CalVel.Y < MoveSpeed)
             {
                 Hit = false;
+                LockMovement = false;
             }
         }
         else
         {
             Velocity.X = Velocity.X * .8f;
-
+            if (IsTimerDone(0))
+                LockMovement = false;
         }
 
         Position += Velocity * Time.DeltaTime;
@@ -328,5 +362,16 @@ public class PlayerMaster
         {
             FC = 0;
         }
+    }
+
+    public virtual void DrawPlayerNoUpdate() 
+    {
+        Graphics.Scale = .85f;
+        if (Velocity.X > 0)
+        {
+            Graphics.DrawSubset(PlayerTexures[AnimIndex], new Vector2(Position.X - Size.X * .6f, Position.Y - Size.Y * .3f), AnimOffeset, new Vector2(128, 128));
+        }
+        else
+            Graphics.DrawSubset(PlayerTexuresB[AnimIndex], new Vector2(Position.X - Size.X * .6f, Position.Y - Size.Y * .3f), AnimOffeset, new Vector2(128, 128));
     }
 }
