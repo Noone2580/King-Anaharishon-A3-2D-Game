@@ -2,6 +2,8 @@
 using System;
 using System.Drawing;
 using System.Numerics;
+
+// Made By Anaharishon
 public class VBot : PlayerMaster
 {
     public override PlayerMaster NewSelf()
@@ -16,11 +18,5 @@ public class VBot : PlayerMaster
         JumpForce = -560;
         MaxJumps = 4;
 
-
-        for (int i = 0; i < TexureLocations.Length; i++)
-        {
-            PlayerTexures.SetValue(Graphics.LoadTexture(TexureLocations[i]), i);
-            PlayerTexuresB.SetValue(Graphics.LoadTexture(TexureLocationsBack[i]), i);
-        }
     }
 }

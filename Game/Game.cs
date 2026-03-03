@@ -119,6 +119,12 @@ public class Game
                 {
                     Players[i].Attack();
                 }
+
+                if (Input.IsControllerButtonPressed(i, ControllerButton.RightFaceDown))
+                {
+                    Players[i].SpecialAttack();
+                }
+
                 if (Input.IsControllerButtonPressed(i, ControllerButton.RightFaceUp))
                 {
                     Players[i].Jump();

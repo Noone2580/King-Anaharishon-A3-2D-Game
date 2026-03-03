@@ -13,10 +13,11 @@ public class CharacterMenu
     Vector2[] PlayerPos = new Vector2[9];
     float PlayerPawnSize = 20;
     bool[] PlayerHasCharacter = new bool[4];
+    int[] PCIndex = new int[4];
 
 
     // Character Vars
-    PlayerMaster[] AllCharacters = [new VBot()];
+    PlayerMaster[] AllCharacters = [new VBot(), new SparkPlug()];
     Vector2[] PortraitPos = new Vector2[2];
     Vector2 PortraitSizes = new Vector2(128, 60);
     Vector2[] ChararterPos = new Vector2[4];
@@ -31,11 +32,14 @@ public class CharacterMenu
 
         for (int i = 0; i < AllCharacters.Length; i++)
         {
+            AllCharacters[i].SetCustomVars();
+
             for (int c = 0; c < AllCharacters[i].PortraitTexturesLocations.Length; c++)
             {
                 AllCharacters[i].PortraitTexures[c] = Graphics.LoadTexture(AllCharacters[i].PortraitTexturesLocations[c]);
             }
-            PortraitPos[i] = new Vector2(Window.Width / 2, Window.Height / 2);
+            PortraitPos[i] = new Vector2((PortraitSizes.X * i) + 10 + 10 * i, 10);
+
         }
     }
 
@@ -64,11 +68,10 @@ public class CharacterMenu
             ChararterPos = new Vector2[Input.GetConnectedControllerCount()];
             game.Players = new PlayerMaster[Input.GetConnectedControllerCount()];
 
+            PCIndex = new int[Input.GetConnectedControllerCount()];
+
             for (int i = 0; i < ChararterPos.Length; i++)
             {
-                //if (i == 0)
-                //    ChararterPos[0] = new Vector2(0, 350);
-                //else
                 ChararterPos[i] = new Vector2(200 * i, 350);
             }
         }
@@ -114,6 +117,7 @@ public class CharacterMenu
                         {
                             PlayerHasCharacter[i] = true;
                             game.Players[i] = AllCharacters[c].NewSelf();
+                            PCIndex[i] = c;
                         }
 
                         Graphics.Scale = 1.56f;
@@ -127,8 +131,8 @@ public class CharacterMenu
             {
                 Graphics.Scale = 1.56f;
 
-                Graphics.DrawSubset(game.Players[i].PortraitTexures[0], ChararterPos[i], new Vector2(), new Vector2(128));
-                Text.Draw(game.Players[i].Name, ChararterPos[i].X + 30, 560);
+                Graphics.DrawSubset(AllCharacters[PCIndex[i]].PortraitTexures[0], ChararterPos[i], new Vector2(), new Vector2(128));
+                Text.Draw(AllCharacters[PCIndex[i]].Name, ChararterPos[i].X + 30, 560);
 
             }
 

@@ -40,7 +40,7 @@ public class PlayerMaster
     public Vector2 SpritSize { get; set; } = new Vector2(128, 128);
     Vector2 AnimOffeset;
     int AnimOffIndex = 0;
-    int MaxAnimOffIndex = 3;
+    public int MaxAnimOffIndex = 3;
     int AnimIndex = 0;
     public int AnimFrameRate { get; set; } = 6;
 
@@ -53,7 +53,7 @@ public class PlayerMaster
     public Vector2 Position = new Vector2();
     public Vector2 Velocity = new Vector2();
     Vector2 LastDirection = new Vector2(1, 0);
-
+    public bool LockMovement = false;
 
     // Jumping Vars
     public float JumpForce { get; set; } = -700;
@@ -217,6 +217,11 @@ public class PlayerMaster
             return;
         }
     }
+    public virtual void SpecialAttack()// Special Attack
+    {
+
+    } 
+
 
     public virtual void Die()
     {
@@ -231,34 +236,47 @@ public class PlayerMaster
     // Movement
     public virtual void Jump()
     {
-        if (NumJumps < MaxJumps)
+        if (!LockMovement)
         {
-            Velocity.Y = JumpForce;
-            NumJumps++;
+            if (NumJumps < MaxJumps)
+            {
+                Velocity.Y = JumpForce;
+                NumJumps++;
+            }
+            LastDirection = new Vector2(0, -1);
         }
-        LastDirection = new Vector2(0, -1);
     }
     public virtual void MoveLeft()
     {
-        Velocity.X += -MoveSpeed;
-        LastDirection = new Vector2(-1, 0);
-
+        if (!LockMovement)
+        {
+            Velocity.X += -MoveSpeed;
+            LastDirection = new Vector2(-1, 0);
+        }
     }
     public virtual void MoveRight()
     {
-        Velocity.X += MoveSpeed;
-        LastDirection = new Vector2(1, 0);
-
+        if (!LockMovement)
+        {
+            Velocity.X += MoveSpeed;
+            LastDirection = new Vector2(1, 0);
+        }
     }
     public virtual void MoveDown()
     {
-        Velocity.Y += MoveSpeed / 3;
-        LastDirection = new Vector2(0, 1);
+        if (!LockMovement )
+        {
+            Velocity.Y += MoveSpeed / 3;
+            LastDirection = new Vector2(0, 1);
+        }
     }
 
     public virtual void MoveUp()
     {
-        LastDirection = new Vector2(0, -1);
+        if (!LockMovement)
+        {
+            LastDirection = new Vector2(0, -1);
+        }
     }
     // Movement End
 
