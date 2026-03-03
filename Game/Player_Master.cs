@@ -68,6 +68,7 @@ public class PlayerMaster
     public float BaseDamage { get; set; } = 10;
     public float HitVelocity;
     public float DamageStunTime { get; set; } = .1f;
+    public float AttackRecoveryTime { get; set; } = .15f;
 
 
 
@@ -210,7 +211,7 @@ public class PlayerMaster
     {
         if (IsTimerDone(0))
         {
-            SetTimer(0, 0.15f);
+            SetTimer(0, AttackRecoveryTime);
             Vector2 TempPos = Position;
             IsAttacking = true;
             AnimOffIndex = 0;

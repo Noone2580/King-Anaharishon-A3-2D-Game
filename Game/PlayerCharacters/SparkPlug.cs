@@ -23,6 +23,7 @@ public class SparkPlug : PlayerMaster
 
         BaseDamage = 2;
         DamageStunTime = .3f;
+        AttackRecoveryTime = .2f;
 
         Name = "Spark Plug";
         PortraitTexturesLocations = ["../../../Assets/Characters/SparkPlug/Sparkplug_Portarit_2.png", "../../../Assets/Characters/SparkPlug/Sparkplug_Portarit.png"];
