@@ -13,9 +13,9 @@ public class Game
 {
     // Simultions Settings
     int GameState = 0;
-    public float Gravtiy = 25;
+    public float Gravtiy = 20;
     float OutOfBoundsRange = 100;
-    float HitVelocity = 2f;
+    float HitVelocity = 5f;
     public int FC = 0;
     float[] Timers = new float[100];
 

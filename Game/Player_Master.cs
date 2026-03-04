@@ -68,8 +68,8 @@ public class PlayerMaster
     public float DHp = 0;
     public float BaseDamage { get; set; } = 10;
     public float HitVelocity;
-    public float DamageStunTime { get; set; } = .1f;
-    public float AttackRecoveryTime { get; set; } = .15f;
+    public float DamageStunTime { get; set; } = .05f;
+    public float AttackRecoveryTime { get; set; } = .4f;
 
 
 

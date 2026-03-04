@@ -9,12 +9,15 @@ public class SparkPlug : PlayerMaster
     bool Targeting = false;
 
     Vector2 TargetPostion = Vector2.Zero;
-    float TargetingMoveSpeed = 250;
+    float TargetingMoveSpeed = 800;
     Vector2 TargetSize = new Vector2(50);
 
     int TargetingStage = 0;
-    float TargetingDamage = 100;
+    float TargetingDamage = 150;
     float TargetCharageSpeed = 10;
+
+    string TargetTextureLocation = "../../../Assets/Characters/SparkPlug/SparkTarget.png";
+    Texture2D TargetTexture;
 
     public override PlayerMaster NewSelf()
     {
@@ -33,7 +36,7 @@ public class SparkPlug : PlayerMaster
 
         BaseDamage = 2;
         DamageStunTime = .3f;
-        AttackRecoveryTime = .2f;
+        AttackRecoveryTime = .4f;
 
         Name = "Spark Plug";
         PortraitTexturesLocations = ["../../../Assets/Characters/SparkPlug/Sparkplug_Portarit_2.png", "../../../Assets/Characters/SparkPlug/Sparkplug_Portarit.png"];
@@ -52,6 +55,8 @@ public class SparkPlug : PlayerMaster
         "../../../Assets/Characters/SparkPlug/SparkWhip_Back.png",// Hit = 3
         "../../../Assets/Characters/SparkPlug/SparkWhip_Up.png",// Hit Up = 4
         "../../../Assets/Characters/SparkPlug/SparkWhip_Down.png"];// Hit Down = 5
+
+        TargetTexture = Graphics.LoadTexture(TargetTextureLocation);
     }
 
     public override void SpecialAttack()
@@ -61,6 +66,7 @@ public class SparkPlug : PlayerMaster
             game.DealDamage(TargetingDamage, TargetPostion, TargetSize, new Vector2(1, 1), .3f, this);
             LockMovement = false;
             Targeting = false;
+            return;
         }
 
         if (LastDirection.Y > 0)
@@ -71,7 +77,27 @@ public class SparkPlug : PlayerMaster
                 Targeting = true;
                 TargetPostion = Position;
                 SetTimer(0, 3);
-                SetTimer(5, 6);
+                SetTimer(5, 4);
+                return;
+            }
+        }
+
+        if (LastDirection.X > 0 || LastDirection.X < 0)
+        {
+
+            Vector2 TempPos = Position;
+
+            if (IsTimerDone(4))
+            {
+                if (LastDirection.X > 0)
+                    TempPos.X = Position.X - Size.X;
+                if (LastDirection.X < 0)
+                    TempPos.X = Position.X + Size.X;
+                LockMovement = true;
+                game.DealDamage(10, TempPos, Size, LastDirection, 2, this);
+
+                SetTimer(0, 1);
+                SetTimer(4,4);
             }
         }
     }
@@ -139,7 +165,11 @@ public class SparkPlug : PlayerMaster
             else
             {
                 DrawPlayerNoUpdate();
+
                 Draw.Rectangle(TargetPostion, TargetSize);
+                Graphics.Scale = .4f;
+                Graphics.DrawSubset(TargetTexture, TargetPostion, new Vector2(0, 0), new Vector2(128, 128));
+
             }
         }
         else
