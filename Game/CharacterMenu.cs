@@ -48,6 +48,7 @@ public class CharacterMenu
         // Reset screen
         Window.ClearBackground(new Color(150, 0, 0));
         Graphics.Scale = 1;
+        Text.Color = Color.Black;
 
         // Draw Portaits
         for (int i = 0; i < PortraitPos.Length; i++)

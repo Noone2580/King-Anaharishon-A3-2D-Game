@@ -165,6 +165,11 @@ public class PlayerMaster
             PlayerTexures.SetValue(Graphics.LoadTexture(TexureLocations[i]), i);
             PlayerTexuresB.SetValue(Graphics.LoadTexture(TexureLocationsBack[i]), i);
         }
+
+        for (int i = 0;i < PortraitTexturesLocations.Length; i++) 
+        {
+            PortraitTexures.SetValue(Graphics.LoadTexture(PortraitTexturesLocations[i]), i);
+        }
     }
 
     public virtual void SetCustomVars()

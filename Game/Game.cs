@@ -40,7 +40,7 @@ public class Game
         return Floor;
     }
 
-    public void DealDamage(float Damage, Vector2 Postion, Vector2 Size, Vector2 Direction, float StunTime ,PlayerMaster PlayerAttacking)// Deal Damage to other players
+    public void DealDamage(float Damage, Vector2 Postion, Vector2 Size, Vector2 Direction, float StunTime, PlayerMaster PlayerAttacking)// Deal Damage to other players
     {
         if (PlayerAttacking != null)// Check if attacking player exists 
         {
@@ -127,51 +127,78 @@ public class Game
 
             for (int i = 0; i < Players.Length; i++)
             {
+                int NumAlive = 0;
 
-                if (Players[i].Position.Y > Window.Height + OutOfBoundsRange || Players[i].Position.Y + Players[i].Size.Y < 0 - OutOfBoundsRange || Players[i].Position.X + Players[i].Size.X < 0 - OutOfBoundsRange || Players[i].Position.X > Window.Width + OutOfBoundsRange) // Kill player if off screen
+                if (Players[i] != null)
                 {
-                    Players[i].Die();
+                    if (Players[i].Lives >= 0)
+                    {
+                        NumAlive++;
+
+                        Vector2 Pos = new Vector2((200 * i) + 150 + 10 * i, 550);
+
+                        Text.Color = Color.DarkGray;
+                        Draw.FillColor = Color.White;
+
+                        Text.Size = 70;
+                        Graphics.Scale = .8f;
+
+                        Draw.Circle(Pos, 50);
+                        Graphics.Draw(Players[i].PortraitTexures[0], Pos - new Vector2(50));
+                        Text.Draw($"{Players[i].DHp}%", Pos.X - 50, Pos.Y - 25);
+
+                        Text.Color = Color.Green;
+                        Text.Size = 60;
+                        Text.Draw($"{Players[i].Lives}", Pos.X + 50, Pos.Y - 25);
+
+                        if (Players[i].Position.Y > Window.Height + OutOfBoundsRange || Players[i].Position.Y + Players[i].Size.Y < 0 - OutOfBoundsRange || Players[i].Position.X + Players[i].Size.X < 0 - OutOfBoundsRange || Players[i].Position.X > Window.Width + OutOfBoundsRange) // Kill player if off screen
+                        {
+                            Players[i].Die();
+                        }
+
+                        if (IsTimerDone(i))// If the player is not stuned
+                        {
+                            Players[i].DrawPlayer();
+
+                            // Then Move
+                            if (Input.IsControllerButtonPressed(i, ControllerButton.RightFaceLeft))
+                            {
+                                Players[i].Attack();
+                            }
+
+                            if (Input.IsControllerButtonPressed(i, ControllerButton.RightFaceDown))
+                            {
+                                Players[i].SpecialAttack();
+                            }
+
+                            if (Input.IsControllerButtonPressed(i, ControllerButton.RightFaceUp))
+                            {
+                                Players[i].Jump();
+                            }
+
+                            if (Input.GetControllerAxis(i, ControllerAxis.LeftX) < -DeadZone)
+                            {
+                                Players[i].MoveLeft();
+                            }
+                            if (Input.GetControllerAxis(i, ControllerAxis.LeftX) > DeadZone)
+                            {
+                                Players[i].MoveRight();
+                            }
+
+                            if (Input.GetControllerAxis(i, ControllerAxis.LeftY) <= -DeadZone)
+                            {
+                                Players[i].MoveUp();
+                            }
+                            if (Input.GetControllerAxis(i, ControllerAxis.LeftY) > DeadZone)
+                            {
+                                Players[i].MoveDown();
+                            }
+                        }
+                        else Players[i].DrawPlayerNoUpdate();
+                    }
                 }
 
-                if (IsTimerDone(i))// If the player is not stuned
-                {
-                    Players[i].DrawPlayer();
-
-                    // Then Move
-                    if (Input.IsControllerButtonPressed(i, ControllerButton.RightFaceLeft))
-                    {
-                        Players[i].Attack();
-                    }
-
-                    if (Input.IsControllerButtonPressed(i, ControllerButton.RightFaceDown))
-                    {
-                        Players[i].SpecialAttack();
-                    }
-
-                    if (Input.IsControllerButtonPressed(i, ControllerButton.RightFaceUp))
-                    {
-                        Players[i].Jump();
-                    }
-
-                    if (Input.GetControllerAxis(i, ControllerAxis.LeftX) < -DeadZone)
-                    {
-                        Players[i].MoveLeft();
-                    }
-                    if (Input.GetControllerAxis(i, ControllerAxis.LeftX) > DeadZone)
-                    {
-                        Players[i].MoveRight();
-                    }
-
-                    if (Input.GetControllerAxis(i, ControllerAxis.LeftY) <= -DeadZone)
-                    {
-                        Players[i].MoveUp();
-                    }
-                    if (Input.GetControllerAxis(i, ControllerAxis.LeftY) > DeadZone)
-                    {
-                        Players[i].MoveDown();
-                    }
-                }
-                else Players[i].DrawPlayerNoUpdate();
+                if (NumAlive <= 0) { GameState = 0; }
             }
 
             FC++;
