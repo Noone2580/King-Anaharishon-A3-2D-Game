@@ -1,6 +1,7 @@
 ﻿using MohawkGame2D;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Numerics;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -54,7 +55,7 @@ public class PlayerMaster
     public float MoveSpeed { get; set; } = 100;
     public Vector2 Position = new Vector2();
     public Vector2 Velocity = new Vector2();
-    Vector2 LastDirection = new Vector2(1, 0);
+    public Vector2 LastDirection = new Vector2(1, 0);
     public bool LockMovement = false;
 
     // Jumping Vars

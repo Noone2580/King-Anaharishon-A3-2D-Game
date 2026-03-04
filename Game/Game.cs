@@ -68,7 +68,7 @@ public class Game
 
     public void Setup()
     {
-        Window.SetTitle("Fight Night!");
+        Window.SetTitle("Fight Night All Stars!");
         Window.SetSize(800, 600);
 
         menu.Setup(this);
@@ -81,7 +81,7 @@ public class Game
         {
             Players[i].Setup();
             Players[i].game = this;
-            Players[i].Lives = 4;
+            Players[i].Lives = MaxLives;
             Players[i].PIndex = i;
             Players[i].HitVelocity = HitVelocity;
             Players[i].Position = new Vector2(Window.Width / 2, Window.Height);

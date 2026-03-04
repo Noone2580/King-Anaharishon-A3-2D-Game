@@ -6,6 +6,16 @@ using System.Numerics;
 // Made By Payton
 public class SparkPlug : PlayerMaster
 {
+    bool Targeting = false;
+
+    Vector2 TargetPostion = Vector2.Zero;
+    float TargetingMoveSpeed = 250;
+    Vector2 TargetSize = new Vector2(50);
+
+    int TargetingStage = 0;
+    float TargetingDamage = 100;
+    float TargetCharageSpeed = 10;
+
     public override PlayerMaster NewSelf()
     {
         return new SparkPlug();
@@ -46,10 +56,96 @@ public class SparkPlug : PlayerMaster
 
     public override void SpecialAttack()
     {
-        base.SpecialAttack();
+        if (Targeting)
+        {
+            game.DealDamage(TargetingDamage, TargetPostion, TargetSize, new Vector2(1, 1), .3f, this);
+            LockMovement = false;
+            Targeting = false;
+        }
+
+        if (LastDirection.Y > 0)
+        {
+            if (IsTimerDone(5))
+            {
+                LockMovement = true;
+                Targeting = true;
+                TargetPostion = Position;
+                SetTimer(0, 3);
+                SetTimer(5, 6);
+            }
+        }
     }
     public override void Attack()
     {
-        base.Attack();
+        if (!Targeting)
+        {
+            base.Attack();
+        }
+    }
+
+    public override void TakeDamage(Vector2 Direction, float Damage)
+    {
+        Targeting = false;
+
+        base.TakeDamage(Direction, Damage);
+    }
+
+    public override void MoveUp()
+    {
+        base.MoveUp();
+        if (Targeting)
+        {
+            TargetPostion.Y -= TargetingMoveSpeed * Time.DeltaTime;
+
+        }
+    }
+
+    public override void MoveLeft()
+    {
+        base.MoveLeft();
+        if (Targeting)
+        {
+            TargetPostion.X -= TargetingMoveSpeed * Time.DeltaTime;
+
+        }
+    }
+
+    public override void MoveRight()
+    {
+        base.MoveRight();
+        if (Targeting)
+        {
+            TargetPostion.X += TargetingMoveSpeed * Time.DeltaTime;
+
+        }
+    }
+    public override void MoveDown()
+    {
+        base.MoveDown();
+        if (Targeting)
+        {
+            TargetPostion.Y += TargetingMoveSpeed * Time.DeltaTime;
+        }
+    }
+
+    public override void DrawPlayer()
+    {
+        if (Targeting)
+        {
+            if (IsTimerDone(0))
+            {
+                Targeting = false;
+            }
+            else
+            {
+                DrawPlayerNoUpdate();
+                Draw.Rectangle(TargetPostion, TargetSize);
+            }
+        }
+        else
+        {
+            base.DrawPlayer();
+
+        }
     }
 }
