@@ -16,7 +16,7 @@ public class VBot : PlayerMaster
     {
         MoveSpeed = 90;
         JumpForce = -560;
-        MaxJumps = 4;
-
+        MaxJumps = 3;
+        BaseDamage = 5;
     }
 }

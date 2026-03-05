@@ -66,6 +66,7 @@ public class SparkPlug : PlayerMaster
             game.DealDamage(TargetingDamage, TargetPostion, TargetSize, new Vector2(1, 1), .3f, this);
             LockMovement = false;
             Targeting = false;
+            SetTimer(0, 1f);
             return;
         }
 
@@ -76,7 +77,7 @@ public class SparkPlug : PlayerMaster
                 LockMovement = true;
                 Targeting = true;
                 TargetPostion = Position;
-                SetTimer(0, 3);
+                SetTimer(0, 1);
                 SetTimer(5, 4);
                 return;
             }
@@ -90,9 +91,10 @@ public class SparkPlug : PlayerMaster
             if (IsTimerDone(4))
             {
                 if (LastDirection.X > 0)
-                    TempPos.X = Position.X - Size.X;
-                if (LastDirection.X < 0)
                     TempPos.X = Position.X + Size.X;
+                if (LastDirection.X < 0)
+                    TempPos.X = Position.X - Size.X;
+
                 LockMovement = true;
                 game.DealDamage(10, TempPos, Size, LastDirection, 2, this);
 

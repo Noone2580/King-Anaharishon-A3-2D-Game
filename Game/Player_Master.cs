@@ -167,7 +167,7 @@ public class PlayerMaster
             PlayerTexuresB.SetValue(Graphics.LoadTexture(TexureLocationsBack[i]), i);
         }
 
-        for (int i = 0;i < PortraitTexturesLocations.Length; i++) 
+        for (int i = 0; i < PortraitTexturesLocations.Length; i++)
         {
             PortraitTexures.SetValue(Graphics.LoadTexture(PortraitTexturesLocations[i]), i);
         }
@@ -180,17 +180,35 @@ public class PlayerMaster
 
     void Col()// Floor Collsion Check
     {
-        Vector2 FCol = game.FloorCol(Position, Size);
+        Vector4 FCol = game.FloorCol(Position, Size);
 
-        //if (FCol.X != 0)
-        //{
-        //    Position.X = game.FloorCol(Position, Size).X - Size.X;
+        if (FCol.X != 0)
+        {
+            if (FCol.Z < 0)
+                Position.X = FCol.X;
 
-        //    Velocity.X = 0;
-        //}
+            if (FCol.Z > 0)
+                Position.X = FCol.X - Size.X;
+
+            if (Hit)
+            {
+                Velocity.X = -Velocity.X * .7f;
+
+            }
+            else
+            {
+                Velocity.X = 0;
+                Velocity.Y = 0;
+            }
+
+            NumJumps = 0;
+            IsOnGround = true;
+
+            return;
+        }
         if (FCol.Y != 0)
         {
-            Position.Y = game.FloorCol(Position, Size).Y - Size.Y;
+            Position.Y = FCol.Y - Size.Y;
 
             if (Hit)
             {
@@ -258,7 +276,7 @@ public class PlayerMaster
     public virtual void SpecialAttack()// Special Attack
     {
 
-    } 
+    }
 
 
     public virtual void Die()
@@ -302,7 +320,7 @@ public class PlayerMaster
     }
     public virtual void MoveDown()
     {
-        if (!LockMovement )
+        if (!LockMovement)
         {
             Velocity.Y += MoveSpeed / 3;
             LastDirection = new Vector2(0, 1);
@@ -327,7 +345,7 @@ public class PlayerMaster
         if (Hit)
         {
             LockMovement = true;
-            Velocity.X = Velocity.X * .9f;
+            Velocity.X = Velocity.X * .95f;
 
             Vector2 CalVel = Velocity;
 
@@ -371,7 +389,7 @@ public class PlayerMaster
         }
     }
 
-    public virtual void DrawPlayerNoUpdate() 
+    public virtual void DrawPlayerNoUpdate()
     {
         Graphics.Scale = .85f;
         if (Velocity.X > 0)

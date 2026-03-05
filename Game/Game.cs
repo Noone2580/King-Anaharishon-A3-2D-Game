@@ -18,6 +18,14 @@ public class Game
     float HitVelocity = 5f;
     public int FC = 0;
     float[] Timers = new float[100];
+    Texture2D BackGround;
+
+    EffectManager Effects = new EffectManager();
+
+
+    // DEBUG\
+    Texture2D Airrow;
+    //
 
     // Player Settings
     public PlayerMaster[] Players { get; set; } = new PlayerMaster[4];
@@ -27,15 +35,30 @@ public class Game
     // Menu
     CharacterMenu menu = new CharacterMenu();
 
-    public Vector2 FloorCol(Vector2 ColPos, Vector2 ColSize)
+    public Vector4 FloorCol(Vector2 ColPos, Vector2 ColSize)
     {
-        Vector2 Floor = new Vector2(0);
+        Vector4 Floor = new Vector4(0);
+
+        if (ColPos.X < 650 && ColPos.X + 5 > 650 && ColPos.Y + ColSize.Y > 400)
+        {
+            Floor.X = 650;
+            Floor.Z = -1;
+            return Floor;
+        }
+
+        if (ColPos.X + ColSize.X > 150 && ColPos.X + ColSize.X - 5 < 150 && ColPos.Y + ColSize.Y > 400)
+        {
+            Floor.X = 150;
+            Floor.Z = 1;
+            return Floor;
+        }
 
         if (ColPos.X + ColSize.X > 150 && ColPos.X < 650 && ColPos.Y + ColSize.Y > 400)
         {
             Floor.Y = 400;
+            Floor.W = 1;
+            return Floor;
         }
-
 
         return Floor;
     }
@@ -70,6 +93,11 @@ public class Game
     {
         Window.SetTitle("Fight Night All Stars!");
         Window.SetSize(800, 600);
+        BackGround = Graphics.LoadTexture("../../../Assets/BackGrounds/MainStage.png");
+
+        Effects.SetUp();
+
+        Airrow = Graphics.LoadTexture("../../../Assets/Airrow.png");
 
         menu.Setup(this);
         //GameStart();
@@ -121,9 +149,12 @@ public class Game
         {
             // Reset screen
             Window.ClearBackground(Color.White);
+            Graphics.Rotation = 0;
+            Graphics.Scale = 1;
+            Graphics.Draw(BackGround, Vector2.Zero);
 
-            Draw.FillColor = Color.Black;
-            Draw.Rectangle(150, 400, 500, 200);
+            //Draw.FillColor = Color.Black;
+            //Draw.Rectangle(150, 400, 500, 200);
 
             for (int i = 0; i < Players.Length; i++)
             {
@@ -153,8 +184,35 @@ public class Game
 
                         if (Players[i].Position.Y > Window.Height + OutOfBoundsRange || Players[i].Position.Y + Players[i].Size.Y < 0 - OutOfBoundsRange || Players[i].Position.X + Players[i].Size.X < 0 - OutOfBoundsRange || Players[i].Position.X > Window.Width + OutOfBoundsRange) // Kill player if off screen
                         {
+                            Effects.NewKO(Players[i].Position, Vector2.Normalize(Players[i].Velocity));
+
                             Players[i].Die();
                         }
+
+
+
+
+                        // DEBUG
+                        Vector2 Direction = Vector2.Normalize(Players[i].Velocity);
+
+                        float DEEEE = float.RadiansToDegrees(MathF.Sin(Direction.Y / Direction.X) * -1);
+
+
+                        Draw.LineColor = Color.White;
+                        Draw.Line(Players[i].Position.X, Players[i].Position.Y, Players[i].Position.X + (Direction.X * 50), Players[i].Position.Y + (Direction.Y * 50));
+
+                        Graphics.Rotation = -DEEEE;
+                        Graphics.Scale = 5;
+                        Graphics.Draw(Airrow, Players[i].Position);
+
+                        Graphics.Scale = 1;
+                        Graphics.Rotation = 0;
+                        // DEBUG
+
+
+
+
+
 
                         if (IsTimerDone(i))// If the player is not stuned
                         {
@@ -201,6 +259,8 @@ public class Game
                 if (NumAlive <= 0) { GameState = 0; }
             }
 
+
+            Effects.DrawEffects();
             FC++;
             if (FC >= 60)
             {
