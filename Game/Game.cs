@@ -153,8 +153,8 @@ public class Game
             Graphics.Scale = 1;
             Graphics.Draw(BackGround, Vector2.Zero);
 
-            //Draw.FillColor = Color.Black;
-            //Draw.Rectangle(150, 400, 500, 200);
+
+            Effects.DrawKOs();
 
             for (int i = 0; i < Players.Length; i++)
             {
@@ -184,8 +184,35 @@ public class Game
 
                         if (Players[i].Position.Y > Window.Height + OutOfBoundsRange || Players[i].Position.Y + Players[i].Size.Y < 0 - OutOfBoundsRange || Players[i].Position.X + Players[i].Size.X < 0 - OutOfBoundsRange || Players[i].Position.X > Window.Width + OutOfBoundsRange) // Kill player if off screen
                         {
-                            Effects.NewKO(Players[i].Position, Vector2.Normalize(Players[i].Velocity));
+                            Vector2 KOPos = Players[i].Position;
+                            Vector2 KODir = Vector2.Zero;
+                            float KORow = 0;
 
+                            KOPos.X = float.Clamp(KOPos.X, -OutOfBoundsRange / 2, Window.Width + (OutOfBoundsRange / 2));
+                            KOPos.Y = float.Clamp(KOPos.Y, -OutOfBoundsRange / 2, Window.Height + (OutOfBoundsRange / 2));
+
+                            if (Players[i].Position.X > Window.Width + OutOfBoundsRange)
+                            {
+                                KODir.X = 1;
+                                KORow = 180;
+                            }
+                            if (Players[i].Position.X < -OutOfBoundsRange)
+                            {
+                                KODir.X = -1;
+                                KORow = 0;
+                            }
+                            if (Players[i].Position.Y > Window.Height + OutOfBoundsRange)
+                            {
+                                KODir.Y = -1;
+                                KORow = 270;
+                            }
+                            if (Players[i].Position.Y < -OutOfBoundsRange)
+                            {
+                                KODir.Y = 1;
+                                KORow = 90;
+                            }
+
+                            Effects.NewKO(KOPos, KODir, KORow);
                             Players[i].Die();
                         }
 

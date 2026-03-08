@@ -366,12 +366,7 @@ public class PlayerMaster
         }
 
         Position += Velocity * Time.DeltaTime;
-
         Col();
-
-        //Draw.FillColor = Color.Red;
-        //Draw.Rectangle(Position, Size);
-
 
         AnimUpdate();
         Graphics.Scale = .85f;
