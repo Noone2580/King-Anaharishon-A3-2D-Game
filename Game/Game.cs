@@ -217,28 +217,22 @@ public class Game
                         }
 
 
+                        //// DEBUG
+                        //Vector2 Direction = Vector2.Normalize(Players[i].Velocity);
+
+                        //float DEEEE = float.RadiansToDegrees(MathF.Sin(Direction.Y / Direction.X) * -1);
 
 
-                        // DEBUG
-                        Vector2 Direction = Vector2.Normalize(Players[i].Velocity);
+                        //Draw.LineColor = Color.White;
+                        //Draw.Line(Players[i].Position.X, Players[i].Position.Y, Players[i].Position.X + (Direction.X * 50), Players[i].Position.Y + (Direction.Y * 50));
 
-                        float DEEEE = float.RadiansToDegrees(MathF.Sin(Direction.Y / Direction.X) * -1);
+                        //Graphics.Rotation = -DEEEE;
+                        //Graphics.Scale = 5;
+                        //Graphics.Draw(Airrow, Players[i].Position);
 
-
-                        Draw.LineColor = Color.White;
-                        Draw.Line(Players[i].Position.X, Players[i].Position.Y, Players[i].Position.X + (Direction.X * 50), Players[i].Position.Y + (Direction.Y * 50));
-
-                        Graphics.Rotation = -DEEEE;
-                        Graphics.Scale = 5;
-                        Graphics.Draw(Airrow, Players[i].Position);
-
-                        Graphics.Scale = 1;
-                        Graphics.Rotation = 0;
-                        // DEBUG
-
-
-
-
+                        //Graphics.Scale = 1;
+                        //Graphics.Rotation = 0;
+                        //// DEBUG
 
 
                         if (IsTimerDone(i))// If the player is not stuned
