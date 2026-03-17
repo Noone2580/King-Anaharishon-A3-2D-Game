@@ -2,6 +2,10 @@
 using System;
 using System.Numerics;
 
+/// <summary>
+///     Effect Manager script this is where all the Effects logic happens
+/// </summary>
+
 public class EffectManager
 {
     Vector4[] KOs = new Vector4[50];
@@ -12,14 +16,14 @@ public class EffectManager
 
     float[] Timers = new float[50];
 
-    public void SetUp()
+    public void SetUp() // Script Setup
     {
         KOTextureForWord = Graphics.LoadTexture("../../../Assets/Effects/KO_Effect_Sidewas.png");
         KOTextureBackWord = Graphics.LoadTexture("../../../Assets/Effects/KO_Effect_Sidewas_Inver.png");
         KOTexture = KOTextureForWord;
     }
 
-    public bool IsTimerDone(int TimerIndex)
+    public bool IsTimerDone(int TimerIndex) // For Checking if a timer is done
     {
         if (Time.SecondsElapsed >= Timers[TimerIndex])
         {
@@ -30,7 +34,7 @@ public class EffectManager
             return false;
     }
 
-    public void SetTimer(int TimerIndex, float setTime)
+    public void SetTimer(int TimerIndex, float setTime) // sets a new timer
     {
         if (Timers[TimerIndex] <= 0)
         {
@@ -38,7 +42,7 @@ public class EffectManager
         }
     }
 
-    void KOanimUpdate(int index, bool Backword)
+    void KOanimUpdate(int index, bool Backword) // Update the KO Animations
     {
         if (IsTimerDone(index))
         {
@@ -66,22 +70,22 @@ public class EffectManager
         else KOTexture = KOTextureForWord;
     }
 
-    public void NewKO(Vector2 Postion, Vector2 Direction, float ROW)
+    public void NewKO(Vector2 Postion, Vector2 Direction, float ROW) // sets a new KO
     {
         int Index = Array.IndexOf(KOs, new Vector4(0,0,0,0));
         KOs[Index] = new Vector4(Postion, -45 + ROW, 0);
         KOAnimIndex[Index] = 0;
     }
-    public void DrawEffects()
+
+    public void DrawEffects() // Render all effects
     {
-        Graphics.Rotation = 0;
+        Graphics.Rotation = 0; // for now it just resets the image rotation
     }
 
-    public void DrawKOs()
+    public void DrawKOs() // Render KO effect
     {
         for (int i = 0; i < KOs.Length; i++)
         {
-            
 
             if (KOs[i] != new Vector4(0, 0, 0, 0))
             {
@@ -97,10 +101,8 @@ public class EffectManager
                 Graphics.DrawSubset(KOTexture, new Vector2(KOs[i].X, KOs[i].Y), new Vector2(128 * KOs[i].W, 0), new Vector2(128));
                 KOanimUpdate(i, Back);
 
-
             }
         }
-
         Graphics.Rotation = 0;
     }
 }

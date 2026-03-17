@@ -4,7 +4,9 @@ using System.Linq;
 using System.Numerics;
 using System.Xml.Linq;
 
-
+/// <summary>
+///     Character Menu script this is where all the menu logic happens
+/// </summary>
 public class CharacterMenu
 {
     Game game;
@@ -25,7 +27,7 @@ public class CharacterMenu
 
     float PawnMoveSpeed = 400f;
 
-    public void Setup(Game G)
+    public void Setup(Game G) // Script Setup
     {
         game = G;
         PortraitPos = new Vector2[AllCharacters.Length];
@@ -43,7 +45,7 @@ public class CharacterMenu
         }
     }
 
-    public void DrawMenu()
+    public void DrawMenu() // Renders the menu to the screen
     {
         // Reset screen
         Window.ClearBackground(new Color(150, 0, 0));

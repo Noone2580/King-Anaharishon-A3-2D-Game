@@ -4,6 +4,11 @@ using System.Drawing;
 using System.Numerics;
 
 // Made By Anaharishon
+
+/// <summary>
+///     Player Character V Bot
+/// </summary>
+
 public class VBot : PlayerMaster
 {
     public override PlayerMaster NewSelf()

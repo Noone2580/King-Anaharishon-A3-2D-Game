@@ -7,13 +7,13 @@ using System.Numerics;
 namespace MohawkGame2D;
 
 /// <summary>
-///     Your game code goes inside this class!
+///     Main Game script this is where all the game logic happens
 /// </summary>
 public class Game
 {
     // Simultions Settings
     int GameState = 0;
-    public float Gravtiy = 20;
+    public float Gravtiy = 30;
     float OutOfBoundsRange = 100;
     float HitVelocity = 5f;
     public int FC = 0;

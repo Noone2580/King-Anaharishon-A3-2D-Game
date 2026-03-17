@@ -6,10 +6,14 @@ using System.Numerics;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
+/// <summary>
+///     Player Master script this is where all the player logic happens
+/// </summary>
+
 public class PlayerMaster
 {
 
-    public virtual PlayerMaster NewSelf()
+    public virtual PlayerMaster NewSelf() // Returns a new instance of it's self
     {
         return new PlayerMaster();
     }
@@ -20,7 +24,6 @@ public class PlayerMaster
     public string Name = "V-BOT";
     int FC = 0;
     float[] Timers = new float[100];
-
 
     // Anim and size
     public string[] TexureLocations { get; set; } = ["../../../Assets/Characters/VBot/FN_VBOT_Idle.png",// Idle = 0
@@ -38,7 +41,6 @@ public class PlayerMaster
         "../../../Assets/Characters/VBot/FN_VBOT_LightHitDown_Back.png"];// Hit Down = 5
     public string[] PortraitTexturesLocations { get; set; } = ["../../../Assets/Characters/VBot/FN_VBot_Portrait.png", "../../../Assets/Characters/VBot/FN_VBot_Portrait_2.png"];
     public Texture2D[] PortraitTexures { get; set; } = new Texture2D[2];
-
 
     public Vector2 SpritSize { get; set; } = new Vector2(128, 128);
     Vector2 AnimOffeset;
@@ -77,10 +79,10 @@ public class PlayerMaster
     bool Hit;
     bool IsOnGround;
 
-    void AnimUpdate()
+    void AnimUpdate() // Updates the animtons
     {
         if (AnimOffIndex == 0) { AnimOffeset.X = 0; }
-        if (CalTiggerPerSec(AnimFrameRate, FC))
+        if (IsTimerDone(3))
         {
             if (AnimOffIndex < MaxAnimOffIndex)
             {
@@ -94,6 +96,7 @@ public class PlayerMaster
                 if (IsAttacking)
                     IsAttacking = false;
             }
+            SetTimer(3,  1f / AnimFrameRate );
         }
         if (!IsAttacking)
         {
@@ -115,7 +118,7 @@ public class PlayerMaster
         }
     }
 
-    bool CalTiggerPerSec(int Rate, int CurrentFrame)
+    bool CalTiggerPerSec(int Rate, int CurrentFrame) // legaciy timer. it used frame data to set a timer
     {
         if (Rate <= 0)
             return false;
@@ -138,7 +141,7 @@ public class PlayerMaster
         return false;
     }
 
-    public bool IsTimerDone(int TimerIndex)
+    public bool IsTimerDone(int TimerIndex) // Check if a timer is done
     {
         if (Time.SecondsElapsed >= Timers[TimerIndex])
         {
@@ -149,7 +152,7 @@ public class PlayerMaster
             return false;
     }
 
-    public void SetTimer(int TimerIndex, float setTime)
+    public void SetTimer(int TimerIndex, float setTime) // Sets a new timer
     {
         if (Timers[TimerIndex] <= 0)
         {
@@ -158,7 +161,7 @@ public class PlayerMaster
     }
 
 
-    public void Setup()
+    public void Setup() // Script setup
     {
         SetCustomVars();
         for (int i = 0; i < TexureLocations.Length; i++)
@@ -173,7 +176,7 @@ public class PlayerMaster
         }
     }
 
-    public virtual void SetCustomVars()
+    public virtual void SetCustomVars() // Base function for overideing vars
     {
 
     }
@@ -278,8 +281,7 @@ public class PlayerMaster
 
     }
 
-
-    public virtual void Die()
+    public virtual void Die() // Die
     {
         Hit = false;
         NumJumps = 0;
@@ -336,11 +338,9 @@ public class PlayerMaster
     }
     // Movement End
 
-
     public virtual void DrawPlayer()// Render Player
     {
         Velocity += new Vector2(0, game.Gravtiy);
-
 
         if (Hit)
         {
@@ -384,7 +384,7 @@ public class PlayerMaster
         }
     }
 
-    public virtual void DrawPlayerNoUpdate()
+    public virtual void DrawPlayerNoUpdate() // Renders the player without doing velcity or animtion
     {
         Graphics.Scale = .85f;
         if (Velocity.X > 0)

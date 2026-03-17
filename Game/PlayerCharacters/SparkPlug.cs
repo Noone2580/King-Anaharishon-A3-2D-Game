@@ -4,6 +4,10 @@ using System.Drawing;
 using System.Numerics;
 
 // Made By Payton
+
+/// <summary>
+///     Player Character Sprk Plug
+/// </summary>
 public class SparkPlug : PlayerMaster
 {
     bool Targeting = false;
